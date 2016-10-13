@@ -1,9 +1,10 @@
 define(['jquery', 'widgets/js/widget'], function($, widget) {
-    var MyWidgetView = widget.DOMWidgetView.extend({
+    var IPFileSelector = widget.DOMWidgetView.extend({
         render: function() {
-            MyWidgetView.__super__.render.apply(this, arguments);
+            IPFileSelector.__super__.render.apply(this, arguments);
             this._count_changed();
             this.listenTo(this.model, 'change:count', this._count_changed, this);
+            console.log("IP File Selector Hello World");
         },
 
         _count_changed: function() {
@@ -14,6 +15,6 @@ define(['jquery', 'widgets/js/widget'], function($, widget) {
     });
 
     return {
-        MyWidgetView: MyWidgetView
+        IPFileSelector: IPFileSelector
     }
 });
