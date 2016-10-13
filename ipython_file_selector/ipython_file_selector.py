@@ -1,5 +1,5 @@
-from IPython.html.widgets import DOMWidget
-from IPython.utils.traitlets import Unicode, Int
+from ipywidgets import DOMWidget
+from traitlets import Unicode, Int
 
 class IPFileSelector(DOMWidget):
     _view_module = Unicode('nbextensions/ipython_file_selector/ipython_file_selector', sync=True)
