@@ -8,13 +8,11 @@ if (IPython.version[0] === '4' && parseInt(IPython.version[2]) >= 2) {
 }
 
 define(['jquery', path ], function($, widget) {
-    var IPFileSelector = widget.DOMWidgetView.extend({
+    var MyWidgetView = widget.DOMWidgetView.extend({
         render: function() {
-            IPFileSelector.__super__.render.apply(this, arguments);
+            MyWidgetView.__super__.render.apply(this, arguments);
             this._count_changed();
             this.listenTo(this.model, 'change:count', this._count_changed, this);
-            $(this.el).text("Hello world");
-            console.log("IP File Selector Hello World");
         },
 
         _count_changed: function() {
@@ -25,6 +23,6 @@ define(['jquery', path ], function($, widget) {
     });
 
     return {
-        IPFileSelector: IPFileSelector
+        MyWidgetView: MyWidgetView
     }
 });

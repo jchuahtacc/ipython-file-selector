@@ -8,19 +8,19 @@ except:
     pip.main(['install', 'jupyter-pip']); cmdclass = importlib.import_module('jupyterpip').cmdclass
 
 setup(
-    name='ipython_file_selector',
-    version='0.1',
+    name='mywidget',
+    version='0.1.1',
     description='',
     author='',
     author_email='',
     license='',
-    url='https://github.com/jchuahtacc/ipython-file-selector',
+    url='https://github.com/myname/mywidget',
     keywords='python ipython javascript widget mywidget',
     classifiers=['Development Status :: 4 - Beta',
                  'Programming Language :: Python',
                  'License :: OSI Approved :: MIT License'],
-    packages=['ipython_file_selector'],
+    packages=['mywidget'],
     include_package_data=True,
     install_requires=["jupyter-pip"],
-    cmdclass=cmdclass('ipython_file_selector'),
+    cmdclass=cmdclass('mywidget'),
 )
