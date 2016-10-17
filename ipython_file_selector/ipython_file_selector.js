@@ -12,9 +12,14 @@ define(['jquery', path ], function($, widget) {
         render: function() {
             IPFileSelector.__super__.render.apply(this, arguments);
             $(this.el).text("Hello world");
+            this.model.on('msg:custom', this.handleMsg, this);
             var msg = { 'type' : 'init' };
             this.send(msg);
         },
+
+        handleMsg: function(msg) {
+            console.log(msg);
+        }
 
     });
 

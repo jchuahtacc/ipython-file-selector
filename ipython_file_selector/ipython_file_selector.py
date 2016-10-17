@@ -11,4 +11,7 @@ class IPFileSelector(DOMWidget):
 
     def handleMsg(self, widget, content, buffers=None):
         print(content['type'])
+        msg = dict()
+        msg["type"] = "echo"
+        #self.send(msg)
 
