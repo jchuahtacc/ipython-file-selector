@@ -1,5 +1,5 @@
 from ipywidgets import DOMWidget
-from traitlets import Unicode, Int, observe
+from traitlets import Unicode, Int, List, observe
 import os
 
 class IPFileSelector(DOMWidget):
@@ -8,6 +8,8 @@ class IPFileSelector(DOMWidget):
     home_path = Unicode(os.getcwd()).tag(sync=True)
     current_path = Unicode(os.getcwd()).tag(sync=True)
     count = Int(555).tag(sync=True)
+    subdirs = List().tag(sync=True)
+    subfiles = List().tag(sync=True)
 
     def __init__(self, *args, **kwargs):
         super(IPFileSelector, self).__init__(*args, **kwargs)
@@ -18,7 +20,6 @@ class IPFileSelector(DOMWidget):
         msg = dict()
         msg["type"] = "echo"
         #self.send(msg)
-        self.current_path = "blah"
 
     @observe('count')
     def count_changed(self, change):

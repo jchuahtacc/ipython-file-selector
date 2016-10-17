@@ -14,16 +14,20 @@ define(['jquery', path ], function($, widget) {
             this.$notebookHeader = $("<div class='row list_header'><ul class='breadcrumb'></ul></div>").appendTo(this.$notebookList);
 
             this.$breadcrumbs = this.$notebookHeader.find('.breadcrumb');
-            this.$home = $("<li><a href='#'><i class='fa fa-home'></i></a></li>").appendTo(this.$breadcrumbs);
-            this.$blah = $("<li><a href='#'>blah</a></li>").appendTo(this.$breadcrumbs);
 
             this.$notebookList.append(this.notebookRow());
 
-            var count = 0;
             IPFileSelector.__super__.render.apply(this, arguments);
             var that = this;
             $(this.el).append(this.$notebookList);
+
             this.model.on('msg:custom', this.handleMsg, this);
+            this.home_path = this.model.get('home_path');
+            this.current_path = this.home_path;
+
+            // trigger first change
+            this.current_path_changed();
+
             this.listenTo(this.model, 'change:current_path', this.current_path_changed, this);
             var msg = { 'type' : 'init' };
             this.send(msg);
@@ -45,7 +49,17 @@ define(['jquery', path ], function($, widget) {
         },
 
         current_path_changed: function() {
-            console.log("current_path", this.model.get('current_path'));
+            this.current_path = this.model.get('current_path');
+            this.$breadcrumbs.html("");
+            this.$home = $("<li><a href='#' data-path='" + this.home_path + "'><i class='fa fa-home'></i></a></li>").appendTo(this.$breadcrumbs);
+            var crumbs = this.current_path.substring(this.home_path.length).split('/');
+            var crumbpath = this.home_path;
+            for (var index in crumbs) {
+                if (crumbs[index].length > 0) {
+                    crumbpath = crumbpath + "/" + crumbs[index];
+                    this.$newrow = $("<li><a href='#' data-path='" + crumbpath + "'>" + crumbs[index] + "</a></li>").appendTo(this.$breadcrumbs);
+                }
+            }
         }
 
     });
