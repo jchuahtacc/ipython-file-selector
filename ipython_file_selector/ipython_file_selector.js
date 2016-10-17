@@ -10,8 +10,16 @@ if (IPython.version[0] === '4' && parseInt(IPython.version[2]) >= 2) {
 define(['jquery', path ], function($, widget) {
     var IPFileSelector = widget.DOMWidgetView.extend({
         render: function() {
+            var count = 0;
             IPFileSelector.__super__.render.apply(this, arguments);
-            $(this.el).text("Hello world");
+            var that = this;
+            $button = $('<button>click</button>');
+            $button.click(function() {
+                count = count + 1;
+                that.model.set('count', count);
+                that.model.save_changes();
+            });
+            $(this.el).append($button);
             this.model.on('msg:custom', this.handleMsg, this);
             var msg = { 'type' : 'init' };
             this.send(msg);
@@ -19,7 +27,7 @@ define(['jquery', path ], function($, widget) {
 
         handleMsg: function(msg) {
             console.log(msg);
-        }
+        },
 
     });
 
