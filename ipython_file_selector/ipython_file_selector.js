@@ -21,6 +21,7 @@ define(['jquery', path ], function($, widget) {
             });
             $(this.el).append($button);
             this.model.on('msg:custom', this.handleMsg, this);
+            this.listenTo(this.model, 'change:current_path', this.current_path_changed, this);
             var msg = { 'type' : 'init' };
             this.send(msg);
         },
@@ -28,6 +29,10 @@ define(['jquery', path ], function($, widget) {
         handleMsg: function(msg) {
             console.log(msg);
         },
+
+        current_path_changed: function() {
+            console.log("current_path", this.model.get('current_path'));
+        }
 
     });
 
