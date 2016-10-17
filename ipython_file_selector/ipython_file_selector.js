@@ -29,12 +29,14 @@ define(['jquery', path ], function($, widget) {
 
 
             this.listenTo(this.model, 'change:current_path', this.current_path_changed, this);
-            this.listenTo(this.model, 'change:subdirs', this.subdirs_changed, this);
             var msg = { 'type' : 'init' };
             this.send(msg);
         },
 
         handleMsg: function(msg) {
+            if (msg['type'] == 'dir_update') {
+                this.refresh_directory();
+            }
         },
 
         path_click: function(e) {
@@ -62,23 +64,54 @@ define(['jquery', path ], function($, widget) {
             this.$breadcrumbs.find("a").click({ context : this }, this.path_click);
         },
 
-        subdirs_changed: function() {
+        refresh_directory: function() {
+            $("[data-type='parent']").remove();
+            if (this.current_path != this.home_path) {
+                var crumbs = this.current_path.substring(this.home_path.length).split('/');
+                var crumbpath = this.home_path;
+                for (var i = 1; i < crumbs.length - 1; i = i + 1) {
+                    crumbpath = crumbpath + "/" + crumbs[i];
+                }
+                console.log("parent", crumbpath);
+                var $row = $("<div data-type='parent'></div>").addClass("list_item").addClass("row");
+                var $container = $("<div class='col-md-12'></div>").appendTo($row);
+                var $checkbox = $("<input type='checkbox' style='visibility: hidden;'/>").appendTo($container);
+                var $icon = $("<i class='item_icon folder_icon icon-fixed-width'></i>").appendTo($container);
+                var $item = $("<a class='item_link' href='#' data-path='" + crumbpath + "'><span class='item_name'>..</span></a>").appendTo($container);
+                $item.click({ context : this }, this.path_click);
+                $row.prepend($("::before"));
+                $row.append($("::after"));
+                $row.appendTo(this.$notebookList);
+            }
             $("[data-type='folder']").remove();
+            $("[data-type='file']").remove();
             this.subdirs = this.model.get("subdirs");
-            var subdir_elements = [ ];
             for (var i in this.subdirs) {
                 var subdir = this.subdirs[i];
                 var $row = $("<div data-type='folder'></div>").addClass("list_item").addClass("row");
                 var $container = $("<div class='col-md-12'></div>").appendTo($row);
                 var $checkbox = $("<input type='checkbox' />").appendTo($container);
                 var $icon = $("<i class='item_icon folder_icon icon-fixed-width'></i>").appendTo($container);
-                var $item = $("<a class='item_link' href='#' data-path='" + subdir + "'><span class='item_name'>" + subdir.substring(this.current_path.length) + "</span></a>").appendTo($container);
+                var subdir_display = subdir.substring(this.current_path.length + 1) + "/";
+                var $item = $("<a class='item_link' href='#' data-path='" + subdir + "'><span class='item_name'>" + subdir_display  + "</span></a>").appendTo($container);
                 $item.click({ context : this }, this.path_click);
                 $row.prepend($("::before"));
                 $row.append($("::after"));
-                subdir_elements.push($row);
+                $row.appendTo(this.$notebookList);
             }
-            this.$notebookHeader.after(subdir_elements);
+            this.subfiles = this.model.get("subfiles");
+            for (var i in this.subfiles) {
+                var subfile = this.subfiles[i];
+                var $row = $("<div data-type='file'></div>").addClass("list_item").addClass("row");
+                var $container = $("<div class='col-md-12'></div>").appendTo($row);
+                var $checkbox = $("<input type='checkbox' />").appendTo($container);
+                var $icon = $("<i class='item_icon file_icon icon-fixed-width'></i>").appendTo($container);
+                subfile_display = subfile.substring(this.current_path.length + 1);
+                var $item = $("<a class='item_link' href='#' data-path='" + subfile + "'><span class='item_name'>" + subfile_display  + "</span></a>").appendTo($container);
+                $row.prepend($("::before"));
+                $row.append($("::after"));
+                $row.appendTo(this.$notebookList);
+            }
         }
     });
 
