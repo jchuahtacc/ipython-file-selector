@@ -11,6 +11,9 @@ class IPFileSelector(DOMWidget):
     subdirs = List().tag(sync=True)
     subfiles = List().tag(sync=True)
 
+    selected_files = List().tag(sync=True)
+    selected_dirs = List().tag(sync=True)
+
     def __init__(self, *args, **kwargs):
         super(IPFileSelector, self).__init__(*args, **kwargs)
         self.on_msg(self.handleMsg)

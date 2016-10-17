@@ -49,6 +49,13 @@ define(['jquery', path ], function($, widget) {
             this.model.save_changes();
         },
 
+        checkbox_click: function(e) {
+            var $container = $(this).parent("div");
+            var path = $container.find('a').attr('data-path');
+            console.log("checkbox path", path);
+            console.log("type", $container.parent("div").attr('data-type'));
+        },
+
         current_path_changed: function() {
             this.current_path = this.model.get('current_path');
             this.$breadcrumbs.html("");
@@ -112,6 +119,7 @@ define(['jquery', path ], function($, widget) {
                 $row.append($("::after"));
                 $row.appendTo(this.$notebookList);
             }
+            this.$notebookList.find("input:checkbox").click({ context : this }, this.checkbox_click);
         }
     });
 
