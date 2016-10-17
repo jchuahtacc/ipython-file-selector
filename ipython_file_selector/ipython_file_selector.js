@@ -10,20 +10,34 @@ if (IPython.version[0] === '4' && parseInt(IPython.version[2]) >= 2) {
 define(['jquery', path ], function($, widget) {
     var IPFileSelector = widget.DOMWidgetView.extend({
         render: function() {
+            this.$notebookList = $("<div></div>").addClass("list_container");
+            this.$notebookHeader = $("<div class='row list_header'><ul class='breadcrumb'></ul></div>").appendTo(this.$notebookList);
+
+            this.$breadcrumbs = this.$notebookHeader.find('.breadcrumb');
+            this.$home = $("<li><a href='#'><i class='fa fa-home'></i></a></li>").appendTo(this.$breadcrumbs);
+            this.$blah = $("<li><a href='#'>blah</a></li>").appendTo(this.$breadcrumbs);
+
+            this.$notebookList.append(this.notebookRow());
+
             var count = 0;
             IPFileSelector.__super__.render.apply(this, arguments);
             var that = this;
-            $button = $('<button>click</button>');
-            $button.click(function() {
-                count = count + 1;
-                that.model.set('count', count);
-                that.model.save_changes();
-            });
-            $(this.el).append($button);
+            $(this.el).append(this.$notebookList);
             this.model.on('msg:custom', this.handleMsg, this);
             this.listenTo(this.model, 'change:current_path', this.current_path_changed, this);
             var msg = { 'type' : 'init' };
             this.send(msg);
+        },
+
+        notebookRow : function(data) {
+            var $row = $("<div></div>").addClass("list_item").addClass("row");
+            var $container = $("<div class='col-md-12'></div>").appendTo($row);
+            var $checkbox = $("<input type='checkbox' />").appendTo($container);
+            var $icon = $("<i class='item_icon folder_icon icon-fixed-width'></i>").appendTo($container);
+            var $item = $("<a class='item_link' href='#'><span class='item_name'>blah</span></a>").appendTo($container);
+            $row.prepend($("::before"));
+            $row.append($("::after"));
+            return $row;
         },
 
         handleMsg: function(msg) {
