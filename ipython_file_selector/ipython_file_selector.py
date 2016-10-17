@@ -6,7 +6,7 @@ class IPFileSelector(DOMWidget):
     _view_module = Unicode('nbextensions/ipython_file_selector/ipython_file_selector', sync=True)
     _view_name = Unicode('IPFileSelector', sync=True)
     home_path = Unicode(os.getcwd()).tag(sync=True)
-    current_path = Unicode(os.getcwd()).tag(sync=True)
+    current_path = Unicode().tag(sync=True)
     count = Int(555).tag(sync=True)
     subdirs = List().tag(sync=True)
     subfiles = List().tag(sync=True)
@@ -16,12 +16,22 @@ class IPFileSelector(DOMWidget):
         self.on_msg(self.handleMsg)
 
     def handleMsg(self, widget, content, buffers=None):
-        #print(content['type'])
+        if (content['type'] == 'init'):
+            self.current_path_changed(None)
+
+    @observe('current_path')
+    def current_path_changed(self, change):
+        subdirs_temp = [ ]
+        subfiles_temp = [ ]
+        if (os.path.isdir(self.current_path)):
+            for f in os.listdir(self.current_path):
+                ff = self.current_path + "/" + f
+                if os.path.isdir(ff):
+                    subdirs_temp.append(ff)
+                else:
+                    subfiles_temp.append(ff)
+        self.subdirs = subdirs_temp
+        self.subfiles = subfiles_temp
         msg = dict()
-        msg["type"] = "echo"
-        #self.send(msg)
-
-    @observe('count')
-    def count_changed(self, change):
-        print(dir(change))
-
+        msg["type"] = "dir_update"
+        self.send(msg)
