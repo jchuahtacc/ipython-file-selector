@@ -22,6 +22,9 @@ define(['jquery', path ], function($, widget) {
             this.model.on('msg:custom', this.handleMsg, this);
             this.home_path = this.model.get('home_path');
 
+            this.selected_files = this.model.get('selected_files');
+            this.selected_dirs = this.model.get('selected_dirs');
+
             // trigger first change
             this.change_path(this.home_path);
             this.current_path = this.home_path;
@@ -53,9 +56,35 @@ define(['jquery', path ], function($, widget) {
             var $container = $(this).parent("div");
             var path = $container.find('a').attr('data-path');
             var checked = $(this).prop('checked');
-            console.log("checked", checked);
-            console.log("checkbox path", path);
-            console.log("type", $container.parent("div").attr('data-type'));
+            var type = $container.parent("div").attr('data-type');
+            var that = e.data.context;
+            if (type == 'folder') {
+                if (that.selected_dirs.indexOf(path) >= 0) {
+                    if (checked == false) {
+                        // remove
+                        // cull any child paths from selected_dirs and selected_files
+                    }
+                } else {
+                    if (checked == true) {
+                        // add
+                    }
+                }
+            }
+            if (type == 'file') {
+                // get parent directory of file
+                var parent = "";
+                if (checked == false) {
+                    // see if parent path is in selected_dirs. If so, add all this.subfiles except this one.
+                    if (that.selected_files.indexOf(path) >= 0) {
+                        // remove from this.selected_files
+                    }
+                } else {
+                    if (that.selected_files.indexOf(path) < 0) {
+                        // add this.selected_files
+                        // if all files are now selected in this.subfiles and all dirs selected in this.subdirs, just add parent dir
+                    }
+                }
+            }
         },
 
         current_path_changed: function() {
