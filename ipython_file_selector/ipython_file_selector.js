@@ -52,6 +52,8 @@ define(['jquery', path ], function($, widget) {
         checkbox_click: function(e) {
             var $container = $(this).parent("div");
             var path = $container.find('a').attr('data-path');
+            var checked = $(this).prop('checked');
+            console.log("checked", checked);
             console.log("checkbox path", path);
             console.log("type", $container.parent("div").attr('data-type'));
         },
