@@ -21,10 +21,7 @@ define(['jquery', path ], function($, widget) {
 
             this.model.on('msg:custom', this.handleMsg, this);
             this.home_path = this.model.get('home_path');
-            this.selected = this.model.get('selected');
-            if (!this.selected) {
-                this.selected = { };
-            }
+            this.selected = { };
 
             // trigger first change
             this.change_path(this.home_path);
@@ -85,7 +82,7 @@ define(['jquery', path ], function($, widget) {
                 }
                 that.cull_empty(that.selected);
             }
-            console.log("selected", that.selected);
+            that.updateSelected();
         },
 
         cull_empty: function(ref) {
@@ -158,10 +155,12 @@ define(['jquery', path ], function($, widget) {
                         var subfile = subfile_crumb[subfile_crumb.length - 1];
                         ref[crumbs[i]][subfile] = true;
                     }
-                    console.log("selected", this.selected);
                 } else {
                     ref = ref[crumbs[i]];
                 }
+            }
+            if (select_all) {
+                this.updateSelected();
             }
 
             // add parent directory link
@@ -215,6 +214,13 @@ define(['jquery', path ], function($, widget) {
                 $row.appendTo(this.$notebookList);
             }
             this.$notebookList.find("input:checkbox").click({ context : this }, this.checkbox_click);
+        },
+        
+        updateSelected: function() {
+            var msg = { };
+            msg['type'] = 'select';
+            msg['selected'] = this.selected;
+            this.send(msg);
         }
     });
 

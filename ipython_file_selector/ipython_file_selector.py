@@ -1,5 +1,5 @@
 from ipywidgets import DOMWidget
-from traitlets import Unicode, Int, List, Dict, observe
+from traitlets import Unicode, Int, List, observe
 import os
 
 class IPFileSelector(DOMWidget):
@@ -11,10 +11,7 @@ class IPFileSelector(DOMWidget):
     subdirs = List().tag(sync=True)
     subfiles = List().tag(sync=True)
 
-    selected = Dict().tag(sync=True)
-
-    selected_files = List().tag(sync=True)
-    selected_dirs = List().tag(sync=True)
+    selected = dict()
 
     def __init__(self, *args, **kwargs):
         super(IPFileSelector, self).__init__(*args, **kwargs)
@@ -23,6 +20,8 @@ class IPFileSelector(DOMWidget):
     def handleMsg(self, widget, content, buffers=None):
         if (content['type'] == 'init'):
             self.current_path_changed(None)
+        if (content['type'] == 'select'):
+            self.selected = content['selected']
 
     @observe('current_path')
     def current_path_changed(self, change):
