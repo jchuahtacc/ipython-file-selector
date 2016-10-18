@@ -60,8 +60,7 @@ define(['jquery', path ], function($, widget) {
             var type = $container.parent("div").attr('data-type');
             var that = e.data.context;
             
-            var subpath = path.substring(that.home_path.length + 1);
-            var crumbs = subpath.split('/');
+            var crumbs = that.get_crumbs(path);
             var ref = that.selected;
             if (checked) {
                 for (var i in crumbs) {
@@ -104,8 +103,7 @@ define(['jquery', path ], function($, widget) {
         },
 
         path_selected: function(path) {
-            var subpath = path.substring(this.home_path.length + 1);
-            var crumbs = subpath.split('/');
+            var crumbs = this.get_crumbs(path); 
             var ref = this.selected;
             for (var i in crumbs) {
                 if (i == crumbs.length - 1) {
@@ -119,12 +117,18 @@ define(['jquery', path ], function($, widget) {
             return false;
         },
 
+        get_crumbs: function(path) {
+            return path.substring(this.home_path.length + 1).split('/');
+        },
+
         refresh_directory: function() {
+            var ref = this.selected;
+            var crumbs = this.get_crumbs(this.current_path);
+
             $("[data-type='parent']").remove();
             if (this.current_path != this.home_path) {
-                var crumbs = this.current_path.substring(this.home_path.length).split('/');
                 var crumbpath = this.home_path;
-                for (var i = 1; i < crumbs.length - 1; i = i + 1) {
+                for (var i in crumbs) {
                     crumbpath = crumbpath + "/" + crumbs[i];
                 }
                 var $row = $("<div data-type='parent'></div>").addClass("list_item").addClass("row");
