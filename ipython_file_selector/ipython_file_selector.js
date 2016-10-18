@@ -83,8 +83,22 @@ define(['jquery', path ], function($, widget) {
                         }
                     }
                 }
+                that.cull_empty(that.selected);
             }
             console.log("selected", that.selected);
+        },
+
+        cull_empty: function(ref) {
+            var keys = Object.keys(ref);
+            for (var key in keys) {
+                if (ref[keys[key]] != true) {
+                    if (Object.keys(ref[keys[key]]).length == 0) {
+                        delete ref[keys[key]];
+                    } else {
+                        this.cull_empty(ref[keys[key]]);
+                    }
+                }
+            }
         },
 
         current_path_changed: function() {
