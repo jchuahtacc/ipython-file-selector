@@ -1,5 +1,5 @@
 from ipywidgets import DOMWidget
-from traitlets import Unicode, Int, List, observe
+from traitlets import Unicode, Int, List, Dict, observe
 import os
 
 class IPFileSelector(DOMWidget):
@@ -10,6 +10,8 @@ class IPFileSelector(DOMWidget):
     count = Int(555).tag(sync=True)
     subdirs = List().tag(sync=True)
     subfiles = List().tag(sync=True)
+
+    selected = Dict().tag(sync=True)
 
     selected_files = List().tag(sync=True)
     selected_dirs = List().tag(sync=True)
