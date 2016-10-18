@@ -122,13 +122,39 @@ define(['jquery', path ], function($, widget) {
         },
 
         refresh_directory: function() {
+            this.subdirs = this.model.get("subdirs");
+            this.subfiles = this.model.get("subfiles");
+
+            // select all files if parent directory is selected
             var ref = this.selected;
             var crumbs = this.get_crumbs(this.current_path);
+            var select_all = false;
+            var ref = this.selected;
+            for (var i = 0; i < crumbs.length && !select_all && !(ref == undefined || ref == null); i = i + 1) {
+                if (ref[crumbs[i]] == true) {
+                    select_all = true;
+                    ref[crumbs[i]] = { };
+                    for (var j in this.subdirs) {
+                        var subdir_crumb = this.get_crumbs(this.subdirs[j]);
+                        var subdir = subdir_crumb[subdir_crumb.length - 1];
+                        ref[crumbs[i]][subdir] = true;
+                    }
+                    for (var j in this.subfiles) {
+                        var subfile_crumb = this.get_crumbs(this.subfiles[j]);
+                        var subfile = subfile_crumb[subfile_crumb.length - 1];
+                        ref[crumbs[i]][subfile] = true;
+                    }
+                    console.log("selected", this.selected);
+                } else {
+                    ref = ref[crumbs[i]];
+                }
+            }
 
+            // add parent directory link
             $("[data-type='parent']").remove();
             if (this.current_path != this.home_path) {
                 var crumbpath = this.home_path;
-                for (var i in crumbs) {
+                for (var i = 0; i < crumbs.length - 1; i = i + 1) {
                     crumbpath = crumbpath + "/" + crumbs[i];
                 }
                 var $row = $("<div data-type='parent'></div>").addClass("list_item").addClass("row");
@@ -141,9 +167,10 @@ define(['jquery', path ], function($, widget) {
                 $row.append($("::after"));
                 $row.appendTo(this.$notebookList);
             }
+
+            // add child directories and folders
             $("[data-type='folder']").remove();
             $("[data-type='file']").remove();
-            this.subdirs = this.model.get("subdirs");
             for (var i in this.subdirs) {
                 var subdir = this.subdirs[i];
                 var checked = this.path_selected(subdir);
@@ -159,7 +186,6 @@ define(['jquery', path ], function($, widget) {
                 $row.append($("::after"));
                 $row.appendTo(this.$notebookList);
             }
-            this.subfiles = this.model.get("subfiles");
             for (var i in this.subfiles) {
                 var subfile = this.subfiles[i];
                 var checked = this.path_selected(subfile);
